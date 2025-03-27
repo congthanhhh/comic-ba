@@ -1,10 +1,12 @@
 package com.thanh.comic.controller;
 
 import com.thanh.comic.dto.ApiResponse;
+import com.thanh.comic.dto.request.PasswordCreationRequest;
 import com.thanh.comic.dto.request.UserCreationRequest;
 import com.thanh.comic.dto.request.UserUpdateRequest;
 import com.thanh.comic.dto.response.UserResponse;
 import com.thanh.comic.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,6 +26,14 @@ public class UserController {
     ApiResponse<UserResponse> create(@RequestBody UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.create(request))
+                .build();
+    }
+
+    @PostMapping("/create-password")
+    ApiResponse<Void> createPassword(@RequestBody @Valid PasswordCreationRequest request) {
+        userService.createPassword(request);
+        return ApiResponse.<Void>builder()
+                .message("Password has been created, you could use it to log-in")
                 .build();
     }
 

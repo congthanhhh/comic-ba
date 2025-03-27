@@ -14,6 +14,7 @@ public enum ErrorCode {
     UNAUTHORIZED(1004, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_CREDENTIALS(1005, "Invalid credentials, please try again.", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    PASSWORD_EXISTED(1007, "Account already has password", HttpStatus.UNAUTHORIZED),
 ;
 
 

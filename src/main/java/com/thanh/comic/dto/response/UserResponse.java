@@ -14,7 +14,6 @@ public class UserResponse {
     String id;
     String username;
     Boolean noPassword;
-//    String password;
     String email;
     Set<RoleResponse> roles;
 }

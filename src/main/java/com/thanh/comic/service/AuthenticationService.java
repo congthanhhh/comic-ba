@@ -5,18 +5,19 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.thanh.comic.dto.request.AuthenticationRequest;
-import com.thanh.comic.dto.request.IntrospectRequest;
-import com.thanh.comic.dto.request.LogoutRequest;
-import com.thanh.comic.dto.request.RefreshRequest;
+import com.thanh.comic.contanst.PredefinedRole;
+import com.thanh.comic.dto.request.*;
 import com.thanh.comic.dto.response.AuthenticationResponse;
 import com.thanh.comic.dto.response.IntrospectResponse;
 import com.thanh.comic.entity.InvalidatedToken;
+import com.thanh.comic.entity.Role;
 import com.thanh.comic.entity.User;
 import com.thanh.comic.exception.AppException;
 import com.thanh.comic.exception.ErrorCode;
 import com.thanh.comic.repository.InvalidatedTokenRepository;
 import com.thanh.comic.repository.UserRepository;
+import com.thanh.comic.repository.httpClient.OutboundIdentityClient;
+import com.thanh.comic.repository.httpClient.OutboundUserClient;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,9 +32,7 @@ import org.springframework.util.CollectionUtils;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -43,6 +42,8 @@ public class AuthenticationService {
 
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    OutboundIdentityClient outboundIdentityClient;
+    OutboundUserClient outboundUserClient;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -56,6 +57,21 @@ public class AuthenticationService {
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
 
+    @NonFinal
+    @Value("${outbound.identity.client-id}")
+    protected String CLIENT_ID;
+
+    @NonFinal
+    @Value("${outbound.identity.client-secret}")
+    protected String CLIENT_SECRET;
+
+    @NonFinal
+    @Value("${outbound.identity.redirect-uri}")
+    protected String REDIRECT_URI;
+
+    @NonFinal
+    protected final String GRANT_TYPE = "authorization_code";
+
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
         boolean isValid = true;
@@ -67,6 +83,39 @@ public class AuthenticationService {
         }
 
         return IntrospectResponse.builder().valid(isValid).build();
+    }
+
+    public AuthenticationResponse outboundAuthenticate(String code) {
+        var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
+                .code(code)
+                .clientId(CLIENT_ID)
+                .clientSecret(CLIENT_SECRET)
+                .redirectUri(REDIRECT_URI)
+                .grantType(GRANT_TYPE)
+                .build());
+        log.info("ExchangeTokenResponse: {}", response);
+
+        // Get user info
+        var userInfo = outboundUserClient.getUserInfo("json", response.getAccessToken());
+
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.builder().name(PredefinedRole.USER_ROLE).build());
+
+        log.info("User Info {}", userInfo);
+        // Onboard user
+        var user = userRepository.findByEmail(userInfo.getEmail()).orElseGet(
+                () -> userRepository.save(User.builder()
+                        .username(userInfo.getEmail())
+                        .email(userInfo.getEmail())
+                        .roles(roles)
+                        .build()));
+
+        // Generate token
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -142,7 +191,7 @@ public class AuthenticationService {
             InvalidatedToken invalidatedToken = InvalidatedToken.builder()
                     .id(jid).expiryTime(expiryTime).build();
             invalidatedTokenRepository.save(invalidatedToken);
-        }catch (AppException e) {
+        } catch (AppException e) {
             log.info("Token already expired");
         }
     }

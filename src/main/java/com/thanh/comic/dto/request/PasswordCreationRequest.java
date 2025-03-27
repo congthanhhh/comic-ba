@@ -1,5 +1,6 @@
 package com.thanh.comic.dto.request;
 
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,8 +9,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequest {
-    String username;
-    String email;
+public class PasswordCreationRequest {
+    @Size(min = 6, max = 20)
     String password;
+
 }

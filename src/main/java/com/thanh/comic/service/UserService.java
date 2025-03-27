@@ -1,6 +1,7 @@
 package com.thanh.comic.service;
 
 import com.thanh.comic.contanst.PredefinedRole;
+import com.thanh.comic.dto.request.PasswordCreationRequest;
 import com.thanh.comic.dto.request.UserCreationRequest;
 import com.thanh.comic.dto.request.UserUpdateRequest;
 import com.thanh.comic.dto.response.UserResponse;
@@ -50,6 +51,20 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    public void createPassword(PasswordCreationRequest request){
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+
+        User user = userRepository.findByUsername(name).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (StringUtils.hasText(user.getPassword()))
+            throw new AppException(ErrorCode.PASSWORD_EXISTED);
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.save(user);
+    }
+
     public UserResponse update(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -69,10 +84,15 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
-        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
+//        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
+        return userRepository.findAll().stream().map(user -> {
+            var userResponse = userMapper.toUserResponse(user);
+            userResponse.setNoPassword(!StringUtils.hasText(user.getPassword()));
+            return userResponse;
+        }).toList();
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUser(String id) {
         return userMapper.toUserResponse(
                 userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
@@ -81,6 +101,7 @@ public class UserService {
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
+        log.info("Get user info: {}", name);
 
         User user = userRepository.findByUsername(name).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
