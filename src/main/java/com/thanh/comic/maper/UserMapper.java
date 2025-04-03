@@ -1,8 +1,8 @@
 package com.thanh.comic.maper;
 
-import com.thanh.comic.dto.request.UserCreationRequest;
-import com.thanh.comic.dto.request.UserUpdateRequest;
-import com.thanh.comic.dto.response.UserResponse;
+import com.thanh.comic.dto.request.User.UserCreationRequest;
+import com.thanh.comic.dto.request.User.UserUpdateRequest;
+import com.thanh.comic.dto.response.User.UserResponse;
 import com.thanh.comic.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

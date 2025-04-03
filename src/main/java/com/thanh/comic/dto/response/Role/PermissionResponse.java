@@ -1,4 +1,4 @@
-package com.thanh.comic.dto.response;
+package com.thanh.comic.dto.response.Role;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

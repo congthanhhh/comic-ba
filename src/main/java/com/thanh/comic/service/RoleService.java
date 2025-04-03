@@ -1,7 +1,7 @@
 package com.thanh.comic.service;
 
-import com.thanh.comic.dto.request.RoleRequest;
-import com.thanh.comic.dto.response.RoleResponse;
+import com.thanh.comic.dto.request.Role.RoleRequest;
+import com.thanh.comic.dto.response.Role.RoleResponse;
 import com.thanh.comic.maper.RoleMapper;
 import com.thanh.comic.repository.PermissionRepository;
 import com.thanh.comic.repository.RoleRepository;

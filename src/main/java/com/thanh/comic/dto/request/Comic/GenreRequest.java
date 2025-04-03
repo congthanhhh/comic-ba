@@ -1,4 +1,4 @@
-package com.thanh.comic.dto.response;
+package com.thanh.comic.dto.request.Comic;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntrospectResponse {
-    boolean valid;
+public class GenreRequest {
+    String name;
+    String description;
 }

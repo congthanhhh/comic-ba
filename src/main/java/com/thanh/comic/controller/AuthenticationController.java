@@ -2,12 +2,12 @@ package com.thanh.comic.controller;
 
 import com.nimbusds.jose.JOSEException;
 import com.thanh.comic.dto.ApiResponse;
-import com.thanh.comic.dto.request.AuthenticationRequest;
-import com.thanh.comic.dto.request.IntrospectRequest;
-import com.thanh.comic.dto.request.LogoutRequest;
-import com.thanh.comic.dto.request.RefreshRequest;
-import com.thanh.comic.dto.response.AuthenticationResponse;
-import com.thanh.comic.dto.response.IntrospectResponse;
+import com.thanh.comic.dto.request.Auth.AuthenticationRequest;
+import com.thanh.comic.dto.request.Auth.IntrospectRequest;
+import com.thanh.comic.dto.request.Auth.LogoutRequest;
+import com.thanh.comic.dto.request.Auth.RefreshRequest;
+import com.thanh.comic.dto.response.Auth.AuthenticationResponse;
+import com.thanh.comic.dto.response.Auth.IntrospectResponse;
 import com.thanh.comic.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

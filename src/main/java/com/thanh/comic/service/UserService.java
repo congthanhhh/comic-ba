@@ -1,10 +1,10 @@
 package com.thanh.comic.service;
 
 import com.thanh.comic.contanst.PredefinedRole;
-import com.thanh.comic.dto.request.PasswordCreationRequest;
-import com.thanh.comic.dto.request.UserCreationRequest;
-import com.thanh.comic.dto.request.UserUpdateRequest;
-import com.thanh.comic.dto.response.UserResponse;
+import com.thanh.comic.dto.request.Auth.PasswordCreationRequest;
+import com.thanh.comic.dto.request.User.UserCreationRequest;
+import com.thanh.comic.dto.request.User.UserUpdateRequest;
+import com.thanh.comic.dto.response.User.UserResponse;
 import com.thanh.comic.entity.Role;
 import com.thanh.comic.entity.User;
 import com.thanh.comic.exception.AppException;
@@ -16,7 +16,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;

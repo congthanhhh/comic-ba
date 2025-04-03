@@ -1,4 +1,4 @@
-package com.thanh.comic.dto.response;
+package com.thanh.comic.dto.request.Auth;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -11,13 +11,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class OutboundUserResponse {
-    String id;
-    String email;
-    boolean verifiedEmail;
-    String name;
-    String givenName;
-    String familyName;
-    String picture;
-    String locale;
+public class ExchangeTokenRequest {
+    String code;
+    String clientId;
+    String clientSecret;
+    String redirectUri;
+    String grantType;
 }

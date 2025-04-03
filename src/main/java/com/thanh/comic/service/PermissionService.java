@@ -1,7 +1,7 @@
 package com.thanh.comic.service;
 
-import com.thanh.comic.dto.request.PermissionRequest;
-import com.thanh.comic.dto.response.PermissionResponse;
+import com.thanh.comic.dto.request.Role.PermissionRequest;
+import com.thanh.comic.dto.response.Role.PermissionResponse;
 import com.thanh.comic.entity.Permission;
 import com.thanh.comic.maper.PermissionMapper;
 import com.thanh.comic.repository.PermissionRepository;

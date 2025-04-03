@@ -1,7 +1,7 @@
 package com.thanh.comic.repository.httpClient;
 
-import com.thanh.comic.dto.request.ExchangeTokenRequest;
-import com.thanh.comic.dto.response.ExchangeTokenResponse;
+import com.thanh.comic.dto.request.Auth.ExchangeTokenRequest;
+import com.thanh.comic.dto.response.Auth.ExchangeTokenResponse;
 import feign.QueryMap;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;

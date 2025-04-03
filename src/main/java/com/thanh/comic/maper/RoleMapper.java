@@ -1,7 +1,7 @@
 package com.thanh.comic.maper;
 
-import com.thanh.comic.dto.request.RoleRequest;
-import com.thanh.comic.dto.response.RoleResponse;
+import com.thanh.comic.dto.request.Role.RoleRequest;
+import com.thanh.comic.dto.response.Role.RoleResponse;
 import com.thanh.comic.entity.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

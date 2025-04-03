@@ -1,4 +1,4 @@
-package com.thanh.comic.dto.request;
+package com.thanh.comic.dto.request.Auth;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PermissionRequest {
-    String name;
-    String description;
+public class AuthenticationRequest {
+    String username;
+    String email;
+    String password;
 }

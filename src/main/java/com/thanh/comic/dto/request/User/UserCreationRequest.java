@@ -1,19 +1,20 @@
-package com.thanh.comic.dto.response;
+package com.thanh.comic.dto.request.User;
 
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-    String id;
+public class UserCreationRequest {
+
+    @Size(min = 2, message = "USERNAME_INVALID")
     String username;
-    Boolean noPassword;
+
+    String password;
+
     String email;
-    Set<RoleResponse> roles;
 }

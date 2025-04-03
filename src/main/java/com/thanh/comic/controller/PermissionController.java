@@ -1,8 +1,8 @@
 package com.thanh.comic.controller;
 
 import com.thanh.comic.dto.ApiResponse;
-import com.thanh.comic.dto.request.PermissionRequest;
-import com.thanh.comic.dto.response.PermissionResponse;
+import com.thanh.comic.dto.request.Role.PermissionRequest;
+import com.thanh.comic.dto.response.Role.PermissionResponse;
 import com.thanh.comic.service.PermissionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

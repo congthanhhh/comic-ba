@@ -1,6 +1,6 @@
 package com.thanh.comic.repository.httpClient;
 
-import com.thanh.comic.dto.response.OutboundUserResponse;
+import com.thanh.comic.dto.response.Auth.OutboundUserResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -4,21 +4,21 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Page {
+public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long pageId;
-    int pageNumber;
-    String imageUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "chapter_id")
-    Chapter chapter;
+    Long id;
+    String name;
+    String description;
+    @ManyToMany(mappedBy = "genres")
+    private List<Comic> comics;
 }

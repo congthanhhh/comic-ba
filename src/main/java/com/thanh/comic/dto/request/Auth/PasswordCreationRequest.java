@@ -1,4 +1,4 @@
-package com.thanh.comic.dto.request;
+package com.thanh.comic.dto.request.Auth;
 
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -9,12 +9,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreationRequest {
-
-    @Size(min = 2, message = "USERNAME_INVALID")
-    String username;
-
+public class PasswordCreationRequest {
+    @Size(min = 6, max = 20)
     String password;
 
-    String email;
 }

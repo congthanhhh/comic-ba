@@ -1,10 +1,10 @@
 package com.thanh.comic.controller;
 
 import com.thanh.comic.dto.ApiResponse;
-import com.thanh.comic.dto.request.PasswordCreationRequest;
-import com.thanh.comic.dto.request.UserCreationRequest;
-import com.thanh.comic.dto.request.UserUpdateRequest;
-import com.thanh.comic.dto.response.UserResponse;
+import com.thanh.comic.dto.request.Auth.PasswordCreationRequest;
+import com.thanh.comic.dto.request.User.UserCreationRequest;
+import com.thanh.comic.dto.request.User.UserUpdateRequest;
+import com.thanh.comic.dto.response.User.UserResponse;
 import com.thanh.comic.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

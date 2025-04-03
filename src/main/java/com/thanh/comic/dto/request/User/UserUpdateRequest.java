@@ -1,4 +1,4 @@
-package com.thanh.comic.dto.request;
+package com.thanh.comic.dto.request.User;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
