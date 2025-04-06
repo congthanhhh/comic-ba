@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Genre {

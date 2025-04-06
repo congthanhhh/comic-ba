@@ -10,7 +10,10 @@ import com.thanh.comic.repository.GenreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -26,5 +29,33 @@ public class GenreService {
         }
         Genre genre = genreMapper.toGenre(request);
         return genreMapper.toGenreResponse(genreRepository.save(genre));
+    }
+
+    public GenreResponse updateGenre(Long genreId,GenreRequest request) {
+        Genre genre = genreRepository.findById(genreId)
+                .orElseThrow(() -> new AppException(ErrorCode.GENRE_NOT_EXISTED));
+        genre.setName(request.getName());
+        genre.setDescription(request.getDescription());
+        return genreMapper.toGenreResponse(genreRepository.save(genre));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteGenre(Long genreId) {
+        Genre genre = genreRepository.findById(genreId)
+                .orElseThrow(() -> new AppException(ErrorCode.GENRE_NOT_EXISTED));
+        genreRepository.delete(genre);
+    }
+
+    public GenreResponse getGenre(Long genreId) {
+        Genre genre = genreRepository.findById(genreId)
+                .orElseThrow(() -> new AppException(ErrorCode.GENRE_NOT_EXISTED));
+        return genreMapper.toGenreResponse(genre);
+    }
+
+    public List<GenreResponse> getAllGenres() {
+        return genreRepository.findAll()
+                .stream()
+                .map(genreMapper::toGenreResponse)
+                .toList();
     }
 }

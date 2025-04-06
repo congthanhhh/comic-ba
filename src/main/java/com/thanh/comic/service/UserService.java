@@ -83,7 +83,6 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
-//        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
         return userRepository.findAll().stream().map(user -> {
             var userResponse = userMapper.toUserResponse(user);
             userResponse.setNoPassword(!StringUtils.hasText(user.getPassword()));

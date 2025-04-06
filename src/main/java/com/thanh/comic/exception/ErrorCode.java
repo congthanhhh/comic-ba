@@ -16,7 +16,8 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     PASSWORD_EXISTED(1007, "Account already has password", HttpStatus.UNAUTHORIZED),
 //    -----------------------------------------------
-    GENRE_EXISTED(1008, "Genre exited", HttpStatus.UNAUTHORIZED),
+    GENRE_EXISTED(1008, "Genre exited", HttpStatus.BAD_REQUEST),
+    GENRE_NOT_EXISTED(1008, "Genre not exited", HttpStatus.BAD_REQUEST),
 ;
 
 

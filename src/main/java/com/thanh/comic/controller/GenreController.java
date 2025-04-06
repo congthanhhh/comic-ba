@@ -7,10 +7,9 @@ import com.thanh.comic.service.GenreService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,6 +22,35 @@ public class GenreController {
     ApiResponse<GenreResponse> createGenre(@RequestBody GenreRequest request) {
         return ApiResponse.<GenreResponse>builder()
                 .result(genreService.createGenre(request))
+                .build();
+    }
+
+    @PutMapping("/{genreId}")
+    ApiResponse<GenreResponse> updateGenre(@PathVariable Long genreId, @RequestBody GenreRequest request) {
+        return ApiResponse.<GenreResponse>builder()
+                .result(genreService.updateGenre(genreId, request))
+                .build();
+    }
+
+    @DeleteMapping("/{genreId}")
+    ApiResponse<Void> deleteGenre(@PathVariable Long genreId) {
+        genreService.deleteGenre(genreId);
+        return ApiResponse.<Void>builder()
+                .message("Delete genre successfully")
+                .build();
+    }
+
+    @GetMapping("/{genreId}")
+    ApiResponse<GenreResponse> getGenre(@PathVariable Long genreId) {
+        return ApiResponse.<GenreResponse>builder()
+                .result(genreService.getGenre(genreId))
+                .build();
+    }
+
+    @GetMapping
+    ApiResponse<List<GenreResponse>> getAllGenres() {
+        return ApiResponse.<List<GenreResponse>>builder()
+                .result(genreService.getAllGenres())
                 .build();
     }
 }
