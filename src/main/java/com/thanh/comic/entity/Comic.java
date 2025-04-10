@@ -15,15 +15,14 @@ import java.util.List;
 @Entity
 public class Comic {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
     String title;
     String imageUrl;
     String status;
     String description;
     int viewCount;
-    String ageRating;
-    Boolean isDeleted = true;
+    Boolean isActive = true;
 
     @OneToMany(mappedBy = "comic")
     List<Chapter> chapters;

@@ -13,10 +13,14 @@ import java.util.List;
 @AllArgsConstructor 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Genre {
+public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String name;
-    String description;
+
+    @ManyToOne
+    Comic comic;
+
+    @ManyToOne
+    User user;
 }
