@@ -12,5 +12,8 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "spring")
 public interface FollowMapper {
 
+    @Mappings({
+            @Mapping(source = "user.username", target = "username")
+    })
     FollowResponse toFollowResponse(Follow follow);
 }

@@ -5,30 +5,25 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Chapter {
+public class ReadingHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    int chapterNumber;
-    String title;
-    LocalDateTime releaseDate;
-    String summary;
-    int viewCount;
-    Boolean isActive = true;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "comic_id")
-    Comic comic;
+    private User user;
 
-    @OneToMany(mappedBy = "chapter")
-    List<Page> pages;
+    @ManyToOne
+    private Chapter chapter;
+
+    private LocalDateTime startedDate;
+    private int lastReadPageNumber;
+    private LocalDateTime lastViewedDate;
 }

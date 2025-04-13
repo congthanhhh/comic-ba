@@ -12,5 +12,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FollowResponse {
     Comic comic;
-    User user;
+    String username;
 }
