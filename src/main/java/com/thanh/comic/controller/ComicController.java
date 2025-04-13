@@ -1,19 +1,16 @@
 package com.thanh.comic.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thanh.comic.dto.ApiResponse;
 import com.thanh.comic.dto.request.Comic.ComicRequest;
+import com.thanh.comic.dto.request.Comic.ComicUpdateRequest;
 import com.thanh.comic.dto.response.Comic.ComicResponse;
 import com.thanh.comic.service.ComicService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,18 +23,54 @@ public class ComicController {
 
     ComicService comicService;
 
-    @PostMapping
-    ApiResponse<ComicResponse> createManga(@RequestParam("title")String  title,
-                                           @RequestParam("file") MultipartFile file,
-                                           @RequestParam("viewCount") int viewCount,
-                                           @RequestParam("genres") String genres,
-                                           @RequestParam("description") String description) throws IOException {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Long> genreList = objectMapper.readValue(genres, new TypeReference<List<Long>>() {});
-        ComicRequest request = new ComicRequest(title, file, viewCount, genreList, description);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<ComicResponse> createComic(@ModelAttribute ComicRequest request) throws IOException {
+        ComicResponse response = comicService.createComic(request);
         return ApiResponse.<ComicResponse>builder()
-                .result(comicService.create(request))
+                .code(HttpStatus.CREATED.value())
+                .message("Comic created successfully")
+                .result(response)
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<ComicResponse> getComic(@PathVariable String id) {
+        ComicResponse response = comicService.getComicById(id);
+        return ApiResponse.<ComicResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("Comic retrieved successfully")
+                .result(response)
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<List<ComicResponse>> getAllComics() {
+        List<ComicResponse> comics = comicService.getAllComics();
+        return ApiResponse.<List<ComicResponse>>builder()
+                .result(comics)
+                .build();
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<ComicResponse> updateComic(
+            @PathVariable String id,
+            @ModelAttribute ComicUpdateRequest request) throws IOException {
+        ComicResponse response = comicService.updateComic(id, request);
+        return ApiResponse.<ComicResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("Comic updated successfully")
+                .result(response)
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ApiResponse<Void> deleteComic(@PathVariable String id) {
+        comicService.deleteComic(id);
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.NO_CONTENT.value())
+                .message("Comic deleted successfully")
                 .build();
     }
 }

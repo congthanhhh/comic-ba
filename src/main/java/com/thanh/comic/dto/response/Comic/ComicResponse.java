@@ -19,4 +19,5 @@ public class ComicResponse {
     int viewCount;
     String ageRating;
     List<Genre> genres;
+    Boolean isActive;
 }

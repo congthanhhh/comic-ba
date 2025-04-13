@@ -41,21 +41,4 @@ public class ChapterService {
     }
 
 
-
-    public Object updateChapter(Object request) {
-        // Implement the logic to update a chapter
-        return null;
-    }
-
-    public Object getAllChapters() {
-        // Implement the logic to get all chapters
-        return null;
-    }
-
-    public Void deleteChapter(String chapterId) {
-        // Implement the logic to delete a chapter
-        return null;
-    }
-
-
 }
