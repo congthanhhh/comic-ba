@@ -30,7 +30,8 @@ public class CloudinaryService {
     Cloudinary cloudinary;
     List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif");
 
-    public String uploadImage(MultipartFile file) throws IOException {
+    public String uploadImage(MultipartFile file, String folder)
+            throws IOException {
         if (file == null || file.isEmpty()) {
             throw new AppException(ErrorCode.INVALID_FILE_FORMAT);
         }
@@ -45,7 +46,7 @@ public class CloudinaryService {
             throw new AppException(ErrorCode.INVALID_FILE_FORMAT);
         }
         
-        String publicValue = "comic_web/" + generatePublicValue(file.getOriginalFilename());
+        String publicValue = folder + generatePublicValue(file.getOriginalFilename());
         File fileUpload = null;
         
         try {
@@ -98,7 +99,7 @@ public class CloudinaryService {
             if (length < 2) {
                 return null;
             }
-            
+
             // Get the last part (filename with extension)
             String fileWithExtension = urlParts[length - 1];
             // Get the version part or folder name

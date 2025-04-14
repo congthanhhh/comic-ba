@@ -24,12 +24,9 @@ public class ComicController {
     ComicService comicService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<ComicResponse> createComic(@ModelAttribute ComicRequest request) throws IOException {
         ComicResponse response = comicService.createComic(request);
         return ApiResponse.<ComicResponse>builder()
-                .code(HttpStatus.CREATED.value())
-                .message("Comic created successfully")
                 .result(response)
                 .build();
     }
@@ -64,8 +61,15 @@ public class ComicController {
                 .build();
     }
 
+    @PutMapping("/active/{id}")
+    public ApiResponse<Void> updateActive(@PathVariable String id) {
+        comicService.updateActive(id);
+        return ApiResponse.<Void>builder()
+                .message("Comic active is false")
+                .build();
+    }
+
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ApiResponse<Void> deleteComic(@PathVariable String id) {
         comicService.deleteComic(id);
         return ApiResponse.<Void>builder()

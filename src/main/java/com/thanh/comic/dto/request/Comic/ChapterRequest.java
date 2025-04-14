@@ -19,4 +19,5 @@ public class ChapterRequest {
     String summary;
     int viewCount;
     String comicId;
+    List<MultipartFile> images;
 }

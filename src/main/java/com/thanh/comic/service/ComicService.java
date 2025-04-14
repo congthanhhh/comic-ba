@@ -45,7 +45,7 @@ public class ComicService {
             
             // Upload image to Cloudinary
             if (request.getFile() != null && !request.getFile().isEmpty()) {
-                String imageUrl = cloudinaryService.uploadImage(request.getFile());
+                String imageUrl = cloudinaryService.uploadImage(request.getFile(), "comic_web/");
                 comic.setImageUrl(imageUrl);
             }
             
@@ -57,7 +57,7 @@ public class ComicService {
                 }
                 comic.setGenres(genres);
             }
-            
+
             Comic savedComic = comicRepository.save(comic);
             return comicMapper.toComicResponse(savedComic);
         } catch (DataAccessException e) {
@@ -68,7 +68,7 @@ public class ComicService {
             throw e; // Let it be handled by the controller advice
         }
     }
-    
+
     public ComicResponse getComicById(String id) {
         Comic comic = findComicById(id);
         return comicMapper.toComicResponse(comic);
@@ -102,7 +102,7 @@ public class ComicService {
                 String oldImageUrl = comic.getImageUrl();
                 
                 // Upload new image to Cloudinary
-                String newImageUrl = cloudinaryService.uploadImage(request.getFile());
+                String newImageUrl = cloudinaryService.uploadImage(request.getFile(), "comic_web/");
                 comic.setImageUrl(newImageUrl);
                 
                 // Delete old image from Cloudinary after successful upload
@@ -119,7 +119,7 @@ public class ComicService {
                 }
                 comic.setGenres(genres);
             }
-            
+
             Comic updatedComic = comicRepository.save(comic);
             return comicMapper.toComicResponse(updatedComic);
         } catch (DataAccessException e) {
@@ -128,18 +128,23 @@ public class ComicService {
         }
     }
     
+    public void updateActive(String id) {
+            Comic comic = findComicById(id);
+            comic.setIsActive(false);
+            comicRepository.save(comic);
+    }
+
     @Transactional
     public void deleteComic(String id) {
         try {
             Comic comic = findComicById(id);
 
             // Delete image from Cloudinary if it exists
-//            if (comic.getImageUrl() != null && !comic.getImageUrl().isEmpty()) {
-//                cloudinaryService.deleteImage(comic.getImageUrl());
-//            }
-            
-            comic.setIsActive(false);
-            comicRepository.save(comic);
+            if (comic.getImageUrl() != null && !comic.getImageUrl().isEmpty()) {
+                cloudinaryService.deleteImage(comic.getImageUrl());
+            }
+
+            comicRepository.delete(comic);
         } catch (DataAccessException e) {
             log.error("Database error when deleting comic: {}", e.getMessage());
             throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);

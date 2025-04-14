@@ -1,0 +1,14 @@
+package com.thanh.comic.dto.response.Comic;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class PageResponse {
+    int pageNumber;
+    String imageUrl;
+}

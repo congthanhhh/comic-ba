@@ -20,6 +20,6 @@ public class ChapterResponse {
     String summary;
     int viewCount;
     boolean isActive;
-    List<Page> pages;
+    List<PageResponse> pages; // Changed from List<Page> to List<PageResponse>
     String comicTitle;
 }
