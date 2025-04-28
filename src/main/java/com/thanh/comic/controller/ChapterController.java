@@ -9,10 +9,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,6 +25,20 @@ public class ChapterController {
     ApiResponse<ChapterResponse> createChapter(@ModelAttribute ChapterRequest request) {
         return ApiResponse.<ChapterResponse>builder()
                 .result(chapterService.createChapter(request))
+                .build();
+    }
+
+    @GetMapping
+    ApiResponse<List<ChapterResponse>> getAllChapters() {
+        return ApiResponse.<List<ChapterResponse>>builder()
+                .result(chapterService.getAllChapters())
+                .build();
+    }
+
+    @GetMapping("/comic/{comicId}")
+    ApiResponse<List<ChapterResponse>> getAllChaptersByComic(@PathVariable String comicId) {
+        return ApiResponse.<List<ChapterResponse>>builder()
+                .result(chapterService.getActiveChaptersByComicId(comicId))
                 .build();
     }
 }

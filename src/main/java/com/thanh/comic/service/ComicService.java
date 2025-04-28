@@ -4,6 +4,7 @@ import com.thanh.comic.contanst.PredefinedStatusComic;
 import com.thanh.comic.dto.request.Comic.ComicRequest;
 import com.thanh.comic.dto.request.Comic.ComicUpdateRequest;
 import com.thanh.comic.dto.response.Comic.ComicResponse;
+import com.thanh.comic.dto.response.Comic.PaginatedResponse;
 import com.thanh.comic.entity.Comic;
 import com.thanh.comic.entity.Genre;
 import com.thanh.comic.exception.AppException;
@@ -19,6 +20,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,9 +56,6 @@ public class ComicService {
             // Set genres
             if (request.getGenres() != null && !request.getGenres().isEmpty()) {
                 List<Genre> genres = genreRepository.findAllById(request.getGenres());
-                if (genres.size() != request.getGenres().size()) {
-                    throw new AppException(ErrorCode.GENRE_NOT_EXISTED);
-                }
                 comic.setGenres(genres);
             }
 
@@ -65,7 +66,7 @@ public class ComicService {
             throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
         } catch (IOException e) {
             log.error("IO error when creating comic: {}", e.getMessage());
-            throw e; // Let it be handled by the controller advice
+            throw e; 
         }
     }
 
@@ -84,9 +85,28 @@ public class ComicService {
             log.error("Database error when fetching comics: {}", e.getMessage());
             throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
         }
-//        return comicRepository.findAll().stream()
-//                .map(comicMapper::toComicResponse)
-//                .toList();
+    }
+
+    public PaginatedResponse<ComicResponse> getComicsPaginated(int page, int pageSize) {
+        try {
+            Pageable pageable = PageRequest.of(page, pageSize);
+            Page<Comic> comicPage = comicRepository.findActiveComicsOrderByLatestChapter(pageable);
+
+            List<ComicResponse> comicResponses = comicPage.getContent().stream()
+                    .map(comicMapper::toComicResponse)
+                    .toList();
+                    
+            return PaginatedResponse.<ComicResponse>builder()
+                    .content(comicResponses)
+                    .totalPages(comicPage.getTotalPages())
+                    .totalElements(comicPage.getTotalElements())
+                    .currentPage(page)
+                    .pageSize(pageSize)
+                    .build();
+        } catch (DataAccessException e) {
+            log.error("Database error when fetching paginated comics: {}", e.getMessage());
+            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+        }
     }
     
     @Transactional
@@ -95,17 +115,13 @@ public class ComicService {
             Comic comic = findComicById(id);
             
             comicMapper.updateComicFromRequest(request, comic);
-            
-            // Update image if provided
+
             if (request.getFile() != null && !request.getFile().isEmpty()) {
-                // Store old image URL for deletion after successful update
                 String oldImageUrl = comic.getImageUrl();
-                
-                // Upload new image to Cloudinary
+
                 String newImageUrl = cloudinaryService.uploadImage(request.getFile(), "comic_web/");
                 comic.setImageUrl(newImageUrl);
-                
-                // Delete old image from Cloudinary after successful upload
+
                 if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
                     cloudinaryService.deleteImage(oldImageUrl);
                 }

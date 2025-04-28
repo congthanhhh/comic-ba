@@ -91,31 +91,39 @@ public class CloudinaryService {
         }
         
         try {
-            // Typical Cloudinary URL format: https://res.cloudinary.com/cloud_name/image/upload/v1234567890/comic_web/uuid_filename.extension
-            // We need to extract the "comic_web/uuid_filename" part
-            String[] urlParts = imageUrl.split("/");
-            int length = urlParts.length;
+            // Example Cloudinary URL format: 
+            // https://res.cloudinary.com/cloud_name/image/upload/v1234567890/comic_web/chapter/uuid_filename.extension
             
-            if (length < 2) {
+            // First, find the upload part in the URL
+            int uploadIndex = imageUrl.indexOf("/upload/");
+            if (uploadIndex == -1) {
                 return null;
             }
-
-            // Get the last part (filename with extension)
-            String fileWithExtension = urlParts[length - 1];
-            // Get the version part or folder name
-            String versionOrFolder = urlParts[length - 2];
             
-            // Check if the version part starts with 'v'
-            if (versionOrFolder.startsWith("v")) {
-                // If there's a version number, we need to get the folder from the part before that
-                String folder = urlParts[length - 3];
-                String fileName = fileWithExtension.substring(0, fileWithExtension.lastIndexOf('.'));
-                return folder + "/" + fileName;
-            } else {
-                // No version number, use the folder and filename
-                String fileName = fileWithExtension.substring(0, fileWithExtension.lastIndexOf('.'));
-                return versionOrFolder + "/" + fileName;
+            // Extract the part after /upload/ (which may include version number)
+            String afterUpload = imageUrl.substring(uploadIndex + 8);
+            
+            // Split by slash to separate version (if exists) and path components
+            String[] parts = afterUpload.split("/");
+            
+            // Check if first part is a version number (starts with 'v')
+            int startIndex = parts[0].startsWith("v") ? 1 : 0;
+            
+            // Build the public ID by joining all path parts except the last one (filename with extension)
+            StringBuilder publicIdBuilder = new StringBuilder();
+            for (int i = startIndex; i < parts.length - 1; i++) {
+                publicIdBuilder.append(parts[i]);
+                if (i < parts.length - 2) {
+                    publicIdBuilder.append("/");
+                }
             }
+            
+            // Get the filename without extension
+            String fileWithExtension = parts[parts.length - 1];
+            String fileName = fileWithExtension.substring(0, fileWithExtension.lastIndexOf('.'));
+            
+            // Combine folder path with filename
+            return publicIdBuilder.toString() + "/" + fileName;
         } catch (Exception e) {
             log.error("Error extracting public ID from URL: {}", e.getMessage());
             return null;
@@ -160,3 +168,4 @@ public class CloudinaryService {
         return originalName.split("\\.");
     }
 }
+

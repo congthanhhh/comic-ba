@@ -5,10 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ChapterRepository extends JpaRepository<Chapter, Long> {
     
     @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Chapter c " +
            "WHERE c.chapterNumber = :chapterNumber AND c.comic.id = :comicId")
     boolean existsByChapterNumberAndComicId(@Param("chapterNumber") int chapterNumber, 
                                            @Param("comicId") String comicId);
+
+
+    List<Chapter> findByComicIdAndIsActiveOrderByChapterNumberDesc(String comicId, Boolean isActive);
 }

@@ -2,7 +2,7 @@ package com.thanh.comic.maper;
 
 import com.thanh.comic.dto.request.Comic.ChapterRequest;
 import com.thanh.comic.dto.response.Comic.ChapterResponse;
-import com.thanh.comic.dto.response.Comic.PageResponse;
+import com.thanh.comic.dto.response.Comic.PageChapterResponse;
 import com.thanh.comic.entity.Chapter;
 import com.thanh.comic.entity.Page;
 import org.mapstruct.Mapper;
@@ -17,5 +17,5 @@ public interface ChapterMapper {
     @Mapping(source = "pages", target = "pages")
     ChapterResponse toChapterResponse(Chapter chapter);
     
-    PageResponse toPageResponse(Page page);
+    PageChapterResponse toPageChapterResponse(Page page);
 }

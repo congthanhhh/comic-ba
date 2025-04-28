@@ -52,27 +52,22 @@ public class ChapterService {
         
         chapter.setViewCount(0);
         chapter.setIsActive(true);
-        
-        // Save chapter first to get its ID
+
         Chapter savedChapter = chapterRepository.save(chapter);
-        
-        // Handle images if any
+
         if (!CollectionUtils.isEmpty(request.getImages())) {
             List<Page> pages = new ArrayList<>();
             int pageNumber = 1;
             
             for (MultipartFile image : request.getImages()) {
                 try {
-                    // Upload image to Cloudinary
                     String imageUrl = cloudinaryService.uploadImage(image, "comic_web/chapter/");
-                    
-                    // Create new page
+
                     Page page = new Page();
                     page.setPageNumber(pageNumber++);
                     page.setImageUrl(imageUrl);
                     page.setChapter(savedChapter);
-                    
-                    // Save page
+
                     pages.add(pageRepository.save(page));
                 } catch (IOException e) {
                     throw new RuntimeException("Failed to upload image: " + e.getMessage(), e);
@@ -83,5 +78,18 @@ public class ChapterService {
         }
         
         return chapterMapper.toChapterResponse(savedChapter);
+    }
+
+    public List<ChapterResponse> getAllChapters() {
+        List<Chapter> chapters = chapterRepository.findAll();
+        return chapters.stream().map(chapterMapper::toChapterResponse).toList();
+    }
+
+    public List<ChapterResponse> getActiveChaptersByComicId(String comicId) {
+        comicRepository.findById(comicId)
+                .orElseThrow(() -> new RuntimeException("Comic not found"));
+                
+        List<Chapter> chapters = chapterRepository.findByComicIdAndIsActiveOrderByChapterNumberDesc(comicId, true);
+        return chapters.stream().map(chapterMapper::toChapterResponse).toList();
     }
 }
