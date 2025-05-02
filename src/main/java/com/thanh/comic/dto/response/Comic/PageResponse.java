@@ -8,7 +8,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PageChapterResponse {
+public class PageResponse {
+    String titleComic;
+    String chapterNumber;
     int pageNumber;
     String imageUrl;
 }

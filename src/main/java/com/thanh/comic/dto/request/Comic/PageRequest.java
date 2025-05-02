@@ -12,12 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ChapterRequest {
-    int chapterNumber;
-    String title;
-    LocalDateTime releaseDate;
-    String summary;
-    int viewCount;
-    String comicId;
+public class PageRequest {
+    Long chapterId;
     List<MultipartFile> images;
 }

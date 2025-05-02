@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ComicResponse {
+    String id;
     String title;
     String imageUrl;
     String status;

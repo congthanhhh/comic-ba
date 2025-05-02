@@ -1,4 +1,4 @@
-package com.thanh.comic.dto.response;
+package com.thanh.comic.dto.response.Comic;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

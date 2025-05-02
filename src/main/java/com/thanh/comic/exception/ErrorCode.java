@@ -18,10 +18,13 @@ public enum ErrorCode {
 //    -----------------------------------------------
     GENRE_EXISTED(1008, "Genre exited", HttpStatus.BAD_REQUEST),
     GENRE_NOT_EXISTED(1009, "Genre not exited", HttpStatus.BAD_REQUEST),
-    FILE_UPLOAD_ERROR(1010, "Error uploading file", HttpStatus.INTERNAL_SERVER_ERROR),
-    INVALID_FILE_FORMAT(1011, "Invalid file format", HttpStatus.BAD_REQUEST),
-    COMIC_NOT_FOUND(1012, "Comic not found", HttpStatus.NOT_FOUND),
-    FILE_PROCESSING_ERROR(1013, "Error processing file", HttpStatus.INTERNAL_SERVER_ERROR);
+    COMIC_NOT_FOUND(1010, "Comic not found", HttpStatus.NOT_FOUND),
+    CHAPTER_NOT_FOUND(1011,"Chapter not found",HttpStatus.NOT_FOUND),
+    PAGE_NOT_FOUND(1012, "Page not found", HttpStatus.NOT_FOUND),
+//    ------------------------------------------------
+    FILE_UPLOAD_ERROR(1013, "Error uploading file", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_FILE_FORMAT(1014, "Invalid file format", HttpStatus.BAD_REQUEST),
+    FILE_PROCESSING_ERROR(1015, "Error processing file", HttpStatus.INTERNAL_SERVER_ERROR);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

@@ -14,12 +14,13 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ChapterResponse {
+    Long id;
     int chapterNumber;
     String title;
     LocalDateTime releaseDate;
     String summary;
     int viewCount;
     boolean isActive;
-    List<PageResponse> pages; // Changed from List<Page> to List<PageResponse>
+    List<PageChapterResponse> pages;
     String comicTitle;
 }
