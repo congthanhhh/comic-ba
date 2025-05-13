@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PageResponse {
     String titleComic;
-    String chapterNumber;
+    int chapterNumber;
     int pageNumber;
     String imageUrl;
 }

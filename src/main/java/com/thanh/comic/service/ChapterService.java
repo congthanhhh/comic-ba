@@ -35,21 +35,21 @@ public class ChapterService {
     public ChapterResponse createChapter(ChapterRequest request) {
         var comic = comicRepository.findById(request.getComicId())
                 .orElseThrow(() -> new RuntimeException("Comic not found"));
-        
+
         if(chapterRepository.existsByChapterNumberAndComicId
                 (request.getChapterNumber(), request.getComicId())) {
             throw new RuntimeException("Chapter already exists");
         }
-        
+
         Chapter chapter = chapterMapper.toChapter(request);
         chapter.setComic(comic);
-        
+
         if (request.getReleaseDate() == null) {
             chapter.setReleaseDate(LocalDateTime.now());
         } else {
             chapter.setReleaseDate(request.getReleaseDate());
         }
-        
+
         chapter.setViewCount(0);
         chapter.setIsActive(true);
 
@@ -58,7 +58,7 @@ public class ChapterService {
         if (!CollectionUtils.isEmpty(request.getImages())) {
             List<Page> pages = new ArrayList<>();
             int pageNumber = 1;
-            
+
             for (MultipartFile image : request.getImages()) {
                 try {
                     String imageUrl = cloudinaryService.uploadImage(image, "comic_web/chapter/");
@@ -73,10 +73,10 @@ public class ChapterService {
                     throw new RuntimeException("Failed to upload image: " + e.getMessage(), e);
                 }
             }
-            
+
             savedChapter.setPages(pages);
         }
-        
+
         return chapterMapper.toChapterResponse(savedChapter);
     }
 
@@ -88,8 +88,21 @@ public class ChapterService {
     public List<ChapterResponse> getActiveChaptersByComicId(String comicId) {
         comicRepository.findById(comicId)
                 .orElseThrow(() -> new RuntimeException("Comic not found"));
-                
+
         List<Chapter> chapters = chapterRepository.findByComicIdAndIsActiveOrderByChapterNumberDesc(comicId, true);
         return chapters.stream().map(chapterMapper::toChapterResponse).toList();
+    }
+
+
+
+    @Transactional
+    public ChapterResponse incrementChapterViewCount(Long chapterId) {
+        Chapter chapter = chapterRepository.findById(chapterId)
+                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+
+        chapter.setViewCount(chapter.getViewCount() + 1);
+        chapterRepository.save(chapter);
+
+        return chapterMapper.toChapterResponse(chapter);
     }
 }

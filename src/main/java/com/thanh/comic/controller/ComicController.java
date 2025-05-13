@@ -60,6 +60,16 @@ public class ComicController {
                 .build();
     }
 
+    @GetMapping("/paginated/new")
+    public ApiResponse<PaginatedResponse<ComicResponse>> getComicsNew(
+            @RequestParam("page") int page,
+            @RequestParam("pageSize") int pageSize) {
+        PaginatedResponse<ComicResponse> result = comicService.getComicsByReleaseDate(page, pageSize);
+        return ApiResponse.<PaginatedResponse<ComicResponse>>builder()
+                .result(result)
+                .build();
+    }
+
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<ComicResponse> updateComic(
             @PathVariable String id,

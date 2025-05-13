@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -22,6 +23,7 @@ public class Comic {
     String status;
     String description;
     int viewCount;
+    LocalDateTime releaseDate;
     Boolean isActive = true;
 
     @OneToMany(mappedBy = "comic")

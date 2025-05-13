@@ -21,4 +21,6 @@ public class ComicResponse {
     String ageRating;
     List<Genre> genres;
     Boolean isActive;
+    // Add total chapters field
+    int totalChapters;
 }
