@@ -4,6 +4,7 @@ package com.thanh.comic.controller;
 import com.thanh.comic.dto.ApiResponse;
 import com.thanh.comic.dto.request.Comic.ChapterRequest;
 import com.thanh.comic.dto.response.Comic.ChapterResponse;
+import com.thanh.comic.entity.Chapter;
 import com.thanh.comic.service.ChapterService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,13 @@ public class ChapterController {
     ApiResponse<List<ChapterResponse>> getAllChaptersByComic(@PathVariable String comicId) {
         return ApiResponse.<List<ChapterResponse>>builder()
                 .result(chapterService.getActiveChaptersByComicId(comicId))
+                .build();
+    }
+
+    @GetMapping("increase-view/{chapterId}")
+    ApiResponse<Chapter> increaseView(@PathVariable Long chapterId) {
+        return ApiResponse.<Chapter>builder()
+                .result(chapterService.getChapterAndIncrementViewCount(chapterId))
                 .build();
     }
 }

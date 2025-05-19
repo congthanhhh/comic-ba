@@ -15,15 +15,15 @@ import java.time.LocalDateTime;
 public class ReadingHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @ManyToOne
-    private User user;
+    User user;
 
     @ManyToOne
-    private Chapter chapter;
+    Chapter chapter;
 
-    private LocalDateTime startedDate;
-    private int lastReadPageNumber;
-    private LocalDateTime lastViewedDate;
+    LocalDateTime startedDate;
+    int lastReadPageNumber;
+    LocalDateTime lastViewedDate;
 }

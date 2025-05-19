@@ -4,12 +4,15 @@ import com.thanh.comic.dto.request.Comic.ChapterRequest;
 import com.thanh.comic.dto.response.Comic.ChapterResponse;
 import com.thanh.comic.entity.Chapter;
 import com.thanh.comic.entity.Page;
+import com.thanh.comic.entity.ReadingHistory;
+import com.thanh.comic.entity.User;
+import com.thanh.comic.exception.AppException;
+import com.thanh.comic.exception.ErrorCode;
 import com.thanh.comic.maper.ChapterMapper;
-import com.thanh.comic.repository.ChapterRepository;
-import com.thanh.comic.repository.ComicRepository;
-import com.thanh.comic.repository.PageRepository;
+import com.thanh.comic.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -30,6 +33,8 @@ public class ChapterService {
     PageRepository pageRepository;
     ChapterMapper chapterMapper;
     CloudinaryService cloudinaryService;
+    ReadingHistoryRepository readingHistoryRepository;
+    UserRepository userRepository;
 
     @Transactional
     public ChapterResponse createChapter(ChapterRequest request) {
@@ -93,16 +98,43 @@ public class ChapterService {
         return chapters.stream().map(chapterMapper::toChapterResponse).toList();
     }
 
-
-
     @Transactional
-    public ChapterResponse incrementChapterViewCount(Long chapterId) {
+    public Chapter getChapterAndIncrementViewCount(Long chapterId) {
+
+        var context = SecurityContextHolder.getContext();
+        String username = context.getAuthentication().getName();
+
         Chapter chapter = chapterRepository.findById(chapterId)
-                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.CHAPTER_NOT_FOUND));
+        if (username != null) {
+            var readingHistory = readingHistoryRepository.findByUsernameAndChapterId(username, chapterId)
+                    .orElse(null);
+            boolean incrementViewCount = false;
+            LocalDateTime now = LocalDateTime.now();
 
-        chapter.setViewCount(chapter.getViewCount() + 1);
-        chapterRepository.save(chapter);
-
-        return chapterMapper.toChapterResponse(chapter);
+            if (readingHistory == null) {
+                incrementViewCount = true;
+                readingHistory = new ReadingHistory();
+//                readingHistory.setUser(userReading);
+                readingHistory.setChapter(chapter);
+                readingHistory.setStartedDate(now);
+                readingHistory.setLastViewedDate(now);
+            } else {
+                LocalDateTime lastViewed = readingHistory.getLastViewedDate();
+                if (lastViewed == null || lastViewed.isBefore(now.minusMinutes(5))) {
+                    incrementViewCount = true;
+                    readingHistory.setLastViewedDate(now);
+                }
+            }
+            if (incrementViewCount) {
+                chapter.setViewCount(chapter.getViewCount() + 1);
+                chapterRepository.save(chapter);
+            }
+            readingHistoryRepository.save(readingHistory);
+        } else {
+            chapter.setViewCount(chapter.getViewCount() + 1);
+            chapterRepository.save(chapter);
+        }
+        return chapter;
     }
 }
