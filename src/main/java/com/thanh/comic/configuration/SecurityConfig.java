@@ -27,10 +27,10 @@ public class SecurityConfig {
             "/users",
             "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh",
             "/auth/outbound/authentication",
-            "/genre/**", "/manga/**", "/follow/**", "/chapter/**",
+            "/genre/**", "/manga/**", "/follow/**",
     };
     private final String[] PUBLIC_ENDPOINTS_GET = {
-            "/genre/**", "/manga/**", "/follow/**", "/chapter/**", "/page/**",
+            "/genre/**", "/manga/**", "/follow/**", "/page/**",
     };
 
     @Autowired

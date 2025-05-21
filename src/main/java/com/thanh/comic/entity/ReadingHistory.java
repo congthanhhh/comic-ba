@@ -17,8 +17,7 @@ public class ReadingHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    User user;
+    String userId;
 
     @ManyToOne
     Chapter chapter;

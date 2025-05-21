@@ -4,6 +4,7 @@ package com.thanh.comic.controller;
 import com.thanh.comic.dto.ApiResponse;
 import com.thanh.comic.dto.request.Comic.ChapterRequest;
 import com.thanh.comic.dto.response.Comic.ChapterResponse;
+import com.thanh.comic.dto.response.Comic.ReadingHistoryResponse;
 import com.thanh.comic.entity.Chapter;
 import com.thanh.comic.service.ChapterService;
 import lombok.AccessLevel;
@@ -44,9 +45,10 @@ public class ChapterController {
     }
 
     @GetMapping("increase-view/{chapterId}")
-    ApiResponse<Chapter> increaseView(@PathVariable Long chapterId) {
-        return ApiResponse.<Chapter>builder()
-                .result(chapterService.getChapterAndIncrementViewCount(chapterId))
+    ApiResponse<ReadingHistoryResponse> increaseView(@PathVariable Long chapterId) {
+        return ApiResponse.<ReadingHistoryResponse>builder()
+                .result(chapterService.incrementViewCount(chapterId))
                 .build();
     }
 }
+

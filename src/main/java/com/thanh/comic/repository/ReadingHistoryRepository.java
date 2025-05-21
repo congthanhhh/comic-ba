@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ReadingHistoryRepository extends JpaRepository<ReadingHistory, Long> {
 
-    @Query("SELECT rh FROM ReadingHistory rh WHERE rh.user.username = :userId AND rh.chapter.id = :chapterId")
-    Optional<ReadingHistory> findByUsernameAndChapterId(String userId, Long chapterId);
+    @Query("SELECT rh FROM ReadingHistory rh WHERE rh.userId = :userId AND rh.chapter.id = :chapterId")
+    Optional<ReadingHistory> findByUserIdAndChapterId(String userId, Long chapterId);
 }
