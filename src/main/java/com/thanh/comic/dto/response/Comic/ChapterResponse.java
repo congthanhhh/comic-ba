@@ -1,7 +1,5 @@
 package com.thanh.comic.dto.response.Comic;
 
-import com.thanh.comic.entity.Comic;
-import com.thanh.comic.entity.Page;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

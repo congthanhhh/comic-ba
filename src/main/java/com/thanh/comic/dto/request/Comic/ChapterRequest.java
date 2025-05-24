@@ -13,11 +13,11 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ChapterRequest {
+    String comicId;
     int chapterNumber;
     String title;
     LocalDateTime releaseDate;
     String summary;
     int viewCount;
-    String comicId;
     List<MultipartFile> images;
 }

@@ -16,7 +16,11 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
                                             @Param("comicId") String comicId);
 
 
-    List<Chapter> findByComicIdAndIsActiveOrderByChapterNumberDesc(String comicId, Boolean isActive);
+    List<Chapter> findByComicIdAndIsActiveOrderByReleaseDateDesc(String comicId, Boolean isActive);
+
+    @Query("SELECT c FROM Chapter c WHERE c.comic.id = :comicId AND c.isActive = :isActive " +
+            "ORDER BY c.chapterNumber DESC LIMIT 2")
+    List<Chapter> findByTop2Chapters(@Param("comicId") String comicId, @Param("isActive") Boolean isActive);
 
     // Count active chapters for a specific comic
     long countByComicIdAndIsActive(String comicId, Boolean isActive);

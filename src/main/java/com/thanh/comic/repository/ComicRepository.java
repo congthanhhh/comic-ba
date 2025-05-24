@@ -18,4 +18,6 @@ public interface ComicRepository extends JpaRepository<Comic, String> {
     // Find comics ordered by release date (newest first)
     @Query("SELECT c FROM Comic c WHERE c.isActive = true ORDER BY c.releaseDate DESC")
     Page<Comic> findActiveComicsOrderByReleaseDate(Pageable pageable);
+    
+
 }

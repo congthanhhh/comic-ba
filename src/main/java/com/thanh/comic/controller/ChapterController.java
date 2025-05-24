@@ -44,7 +44,14 @@ public class ChapterController {
                 .build();
     }
 
-    @GetMapping("increase-view/{chapterId}")
+    @GetMapping("top2/{comicId}")
+    ApiResponse<List<ChapterResponse>> getTop2Chapters(@PathVariable String comicId) {
+        return ApiResponse.<List<ChapterResponse>>builder()
+                .result(chapterService.getTop2ChaptersByComicId(comicId))
+                .build();
+    }
+
+    @PostMapping("increase-view/{chapterId}")
     ApiResponse<ReadingHistoryResponse> increaseView(@PathVariable Long chapterId) {
         return ApiResponse.<ReadingHistoryResponse>builder()
                 .result(chapterService.incrementViewCount(chapterId))

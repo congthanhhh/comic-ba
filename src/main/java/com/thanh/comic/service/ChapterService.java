@@ -101,7 +101,16 @@ public class ChapterService {
                 .orElseThrow(() -> new RuntimeException("Comic not found"));
 
         List<Chapter> chapters =
-                chapterRepository.findByComicIdAndIsActiveOrderByChapterNumberDesc(comicId, true);
+                chapterRepository.findByComicIdAndIsActiveOrderByReleaseDateDesc(comicId, true);
+        return chapters.stream().map(chapterMapper::toChapterResponse).toList();
+    }
+
+    public List<ChapterResponse> getTop2ChaptersByComicId(String comicId) {
+        comicRepository.findById(comicId)
+                .orElseThrow(() -> new RuntimeException("Comic not found"));
+
+        List<Chapter> chapters =
+                chapterRepository.findByTop2Chapters(comicId, true);
         return chapters.stream().map(chapterMapper::toChapterResponse).toList();
     }
 
