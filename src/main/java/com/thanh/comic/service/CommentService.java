@@ -2,6 +2,8 @@ package com.thanh.comic.service;
 
 import com.thanh.comic.dto.request.Comic.CommentRequest;
 import com.thanh.comic.dto.response.Comic.CommentResponse;
+import com.thanh.comic.dto.response.Comic.RepliesCommentResponse;
+import com.thanh.comic.dto.response.Comic.RootCommentResponse;
 import com.thanh.comic.entity.Chapter;
 import com.thanh.comic.entity.Comic;
 import com.thanh.comic.entity.Comment;
@@ -80,10 +82,6 @@ public class CommentService {
                 .toList();
     }
 
-    public List<CommentResponse> getRootComments(String comicId) {
-
-    }
-
     public List<CommentResponse> getCommentByComicId(String comicId) {
         List<Comment> comments = commentRepository.findByComicId(comicId);
         Map<Long, CommentResponse> commentMap = comments.stream()
@@ -109,6 +107,26 @@ public class CommentService {
         }
 
         return rootComments;
+    }
+
+    public List<RootCommentResponse> getRootComments(String comicId) {
+        return commentRepository.findByComicId(comicId).stream()
+                .filter(comment -> comment.getParent() == null)
+                .map(commentMapper::toRootCommentResponse)
+                .toList();
+    }
+
+    public List<RepliesCommentResponse> getRepliesOfRootComment(Long rootCommentId) {
+        return commentRepository.findByParentCommentId(rootCommentId).stream()
+                .map(commentMapper::toRepliesCommentResponse)
+                .toList();
+    }
+
+    public List<RootCommentResponse> getRootCommentsByChapterId(Long chapterId) {
+        return commentRepository.findByChapterId(chapterId).stream()
+                .filter(comment -> comment.getParent() == null)
+                .map(commentMapper::toRootCommentResponse)
+                .toList();
     }
 
 }

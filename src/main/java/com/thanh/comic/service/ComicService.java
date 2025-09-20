@@ -250,5 +250,61 @@ public class ComicService {
         return comicRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Comic not found with id: " + id));
     }
-}
 
+    public PaginatedResponse<ComicResponse> findComicByViewCount(int page, int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Comic> comicPage = comicRepository.findActiveComicsOrderByViewCount(pageable);
+
+            List<ComicResponse> comicResponses = comicPage.getContent().stream()
+                    .map(comicMapper::toComicResponse)
+                    .toList();
+
+            // Set chapter count and view count for each comic response
+            for (ComicResponse response : comicResponses) {
+                String comicId = response.getId();
+                int chapterCount = (int) chapterRepository.countByComicIdAndIsActive(comicId, true);
+                int totalViews = chapterRepository.sumViewCountByComicIdAndIsActive(comicId, true);
+
+                response.setTotalChapters(chapterCount);
+                response.setViewCount(totalViews);
+            }
+
+            return PaginatedResponse.<ComicResponse>builder()
+                    .content(comicResponses)
+                    .totalPages(comicPage.getTotalPages())
+                    .totalElements(comicPage.getTotalElements())
+                    .currentPage(page)
+                    .pageSize(size)
+                    .build();
+        } catch (DataAccessException e) {
+            log.error("Database error when fetching comics by view count: {}", e.getMessage());
+            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+        }
+    }
+
+    public List<ComicResponse> searchComicsByTitle(String title) {
+        try {
+            List<Comic> comics = comicRepository.findActiveComicsByTitleContaining(title);
+
+            List<ComicResponse> comicResponses = comics.stream()
+                    .map(comicMapper::toComicResponse)
+                    .toList();
+
+            // Set chapter count and view count for each comic response
+            for (ComicResponse response : comicResponses) {
+                String comicId = response.getId();
+                int chapterCount = (int) chapterRepository.countByComicIdAndIsActive(comicId, true);
+                int totalViews = chapterRepository.sumViewCountByComicIdAndIsActive(comicId, true);
+
+                response.setTotalChapters(chapterCount);
+                response.setViewCount(totalViews);
+            }
+
+            return comicResponses;
+        } catch (DataAccessException e) {
+            log.error("Database error when searching comics by title: {}", e.getMessage());
+            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+        }
+    }
+}

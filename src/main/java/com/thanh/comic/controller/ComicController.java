@@ -98,5 +98,23 @@ public class ComicController {
                 .message("Comic deleted successfully")
                 .build();
     }
-}
 
+    @GetMapping("/by-view-count")
+    public ApiResponse<PaginatedResponse<ComicResponse>> getComicsByViewCount(@RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "10") int size) {
+        PaginatedResponse<ComicResponse> comics = comicService.findComicByViewCount(page, size);
+        return ApiResponse.<PaginatedResponse<ComicResponse>>builder()
+                .result(comics)
+                .build();
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<List<ComicResponse>> searchComicsByTitle(@RequestParam String title) {
+        List<ComicResponse> comics = comicService.searchComicsByTitle(title);
+        return ApiResponse.<List<ComicResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("Comics found successfully")
+                .result(comics)
+                .build();
+    }
+}
