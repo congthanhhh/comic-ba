@@ -1,2 +1,4 @@
 Homepage
-![Homepage](assets/homepage.png)
+![Homepage](assets/homepage.jpeg)
+Database
+![Database](assets/database.png)
