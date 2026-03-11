@@ -33,6 +33,6 @@ build/
 .vscode/
 
 ### My file ###
-**/application.yaml
+#**/application.yaml
 
 
